@@ -3,14 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, Plane } from '@react-three/drei';
 import House from './components/House';
 import { Leva } from 'leva';
-import { useArchitecturalMaterials } from './hooks/useArchitecturalMaterials';
 
 function Ground() {
-  const { grass } = useArchitecturalMaterials();
   return (
     <Plane args={[200, 200]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-      <meshStandardMaterial {...grass} color="#555" />
-      {/* Tinted dark (#555) to blend with grass texture for a "paver" or "dark grass" look */}
+      <meshStandardMaterial color="#2d4c1e" roughness={1} />
     </Plane>
   );
 }
@@ -34,7 +31,7 @@ function Scene() {
 
       <ContactShadows
         position={[0, 0.01, 0]}
-        opacity={0.7}
+        opacity={0.5}
         scale={100}
         blur={2}
         far={5}
@@ -49,7 +46,7 @@ function App() {
   return (
     <>
       <Leva collapsed={false} />
-      <Canvas shadows camera={{ position: [30, 10, 30], fov: 45 }}>
+      <Canvas shadows camera={{ position: [40, 6, 40], fov: 45 }}>
         <Suspense fallback={null}>
           <Scene />
         </Suspense>

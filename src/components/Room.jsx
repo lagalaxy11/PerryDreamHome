@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Text } from '@react-three/drei';
-import { useArchitecturalMaterials } from '../hooks/useArchitecturalMaterials';
 
 export default function Room({
   position = [0, 0, 0],
@@ -9,7 +8,6 @@ export default function Room({
   depth = 10,
   name = 'Room',
 }) {
-  const materials = useArchitecturalMaterials();
 
   // Dimensions for components
   const slabThickness = 0.5;
@@ -30,18 +28,25 @@ export default function Room({
   const glassHeight = height - (slabThickness * 2);
 
   // Materials definition
-  const wallMaterial = <meshStandardMaterial {...materials.concrete} />;
-  const floorMaterial = <meshStandardMaterial color="#d2b48c" roughness={0.8} />; // Keep internal floor simple wood/tan
+  // Walls: Warm plaster
+  const wallMaterial = <meshStandardMaterial color="#e8e4dc" roughness={0.9} />;
+
+  // Floor (Internal): Simple wood/tan
+  const floorMaterial = <meshStandardMaterial color="#d2b48c" roughness={0.8} />;
+
+  // Glass: Realistic clear glass
   const glassMaterial = (
     <meshPhysicalMaterial
-      transmission={0.9}
+      transmission={1}
       roughness={0}
-      thickness={0.1} // Refraction needs thickness
+      thickness={0.5}
       ior={1.5}
       transparent
       color="white"
     />
   );
+
+  // Roof: Dark Charcoal
   const roofMaterial = <meshStandardMaterial color="#333333" roughness={0.9} />;
 
   return (
@@ -66,7 +71,7 @@ export default function Room({
         {roofMaterial}
       </Box>
 
-      {/* 4. Side Walls (Solid Concrete) - East/West (+X/-X) */}
+      {/* 4. Side Walls (Solid Plaster) - East/West (+X/-X) */}
       {/* Left Wall (-X) */}
       <Box
         args={[wallThickness, glassHeight, depth]}
