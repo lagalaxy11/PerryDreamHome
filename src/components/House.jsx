@@ -1,23 +1,24 @@
 import React from 'react';
-import { useControls } from 'leva';
+import { useControls, folder } from 'leva';
 import Room from './Room';
 
 export default function House() {
   // Task 1: Interactivity (Leva)
-  // Hardcoded initial state dimensions
+  // Reorganized into folders for cleaner UI
   const {
     grWidth, grHeight, grDepth,
     kWidth, kHeight, kDepth
-  } = useControls('Dimensions', {
-    // Great Room: 25' x 25' x 14' high
-    grWidth: { value: 25, min: 10, max: 50, step: 1, label: 'Great Room Width' },
-    grDepth: { value: 25, min: 10, max: 50, step: 1, label: 'Great Room Depth' },
-    grHeight: { value: 14, min: 8, max: 20, step: 1, label: 'Great Room Height' },
-
-    // Kitchen: 20' x 20' x 12' high
-    kWidth: { value: 20, min: 10, max: 40, step: 1, label: 'Kitchen Width' },
-    kDepth: { value: 20, min: 10, max: 40, step: 1, label: 'Kitchen Depth' },
-    kHeight: { value: 12, min: 8, max: 20, step: 1, label: 'Kitchen Height' },
+  } = useControls({
+    'Great Room': folder({
+      grWidth: { value: 25, min: 10, max: 50, step: 1, label: 'Width' },
+      grDepth: { value: 25, min: 10, max: 50, step: 1, label: 'Depth' },
+      grHeight: { value: 14, min: 8, max: 20, step: 1, label: 'Height' },
+    }),
+    'Kitchen': folder({
+      kWidth: { value: 20, min: 10, max: 40, step: 1, label: 'Width' },
+      kDepth: { value: 20, min: 10, max: 40, step: 1, label: 'Depth' },
+      kHeight: { value: 12, min: 8, max: 20, step: 1, label: 'Height' },
+    })
   });
 
   // --- Layout Logic ---
@@ -65,9 +66,6 @@ export default function House() {
   const room1Pos = [roomCenterX, roomHeight / 2, kDepth / 2 + roomSize / 2];
   const room2Pos = [roomCenterX, roomHeight / 2, kDepth / 2 + roomSize + roomSize / 2];
   const room3Pos = [roomCenterX, roomHeight / 2, kDepth / 2 + 2 * roomSize + roomSize / 2];
-
-  // Colors are no longer passed as props, as Room.jsx now uses hardcoded Clay Render materials.
-  // We remove the `color` prop from Room calls.
 
   return (
     <group>

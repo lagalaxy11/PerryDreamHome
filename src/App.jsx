@@ -1,30 +1,58 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sky, Environment, ContactShadows } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows, Plane } from '@react-three/drei';
 import House from './components/House';
 import { Leva } from 'leva';
+import { useArchitecturalMaterials } from './hooks/useArchitecturalMaterials';
+
+function Ground() {
+  const { grass } = useArchitecturalMaterials();
+  return (
+    <Plane args={[200, 200]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
+      <meshStandardMaterial {...grass} color="#555" />
+      {/* Tinted dark (#555) to blend with grass texture for a "paver" or "dark grass" look */}
+    </Plane>
+  );
+}
+
+function Scene() {
+  return (
+    <>
+      <ambientLight intensity={0.4} />
+      <directionalLight
+        position={[20, 30, 20]}
+        intensity={1.2}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0001}
+      />
+
+      <Environment preset="sunset" background />
+
+      <House />
+      <Ground />
+
+      <ContactShadows
+        position={[0, 0.01, 0]}
+        opacity={0.7}
+        scale={100}
+        blur={2}
+        far={5}
+        resolution={1024}
+        color="#000000"
+      />
+    </>
+  );
+}
 
 function App() {
   return (
     <>
       <Leva collapsed={false} />
       <Canvas shadows camera={{ position: [30, 10, 30], fov: 45 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight
-          position={[10, 20, 10]}
-          intensity={1.5}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        <Sky sunPosition={[100, 20, 100]} />
-        <Environment preset="city" />
-
-        <House />
-
-        {/* ContactShadows for grounded feel */}
-        <ContactShadows position={[0, -0.01, 0]} opacity={0.6} scale={100} blur={2.5} far={10} resolution={256} color="#000000" />
-        {/* Removed gridHelper for cleaner Clay Render look */}
-
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
         <OrbitControls makeDefault autoRotate={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} />
       </Canvas>
     </>
