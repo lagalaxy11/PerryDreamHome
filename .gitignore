@@ -1,7 +1,3 @@
 node_modules
 dist
 .DS_Store
-bridge/mapping.json
-bridge/mapping.tmp
-__pycache__/
-.venv/
